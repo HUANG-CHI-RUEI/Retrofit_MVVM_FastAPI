@@ -1,17 +1,16 @@
 package com.ray.retrofitfastapi
 
+import android.annotation.SuppressLint
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import kotlinx.android.synthetic.main.activity_create_new_user.*
 import kotlinx.android.synthetic.main.activity_main.*
 
 
@@ -54,8 +53,9 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private fun initViewModel() {
-        viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
+        viewModel = ViewModelProvider(this)[MainActivityViewModel::class.java]
         viewModel.getUserListObservable().observe(this, Observer<UserList> {
             if (it == null) {
                 Toast.makeText(this@MainActivity, "no result found...", Toast.LENGTH_LONG).show()
@@ -67,7 +67,12 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
         viewModel.getUserList()
     }
 
-
+    private val resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                activityResult ->
+            if(RESULT_OK == activityResult.resultCode)
+                viewModel.getUserList()
+        }
 
     override fun onItemEditClick(user: User) {
         val intent = Intent(this, CreateNewUserActivity::class.java)
@@ -83,10 +88,5 @@ class MainActivity : AppCompatActivity(), RecyclerViewAdapter.OnItemClickListene
 //        super.onActivityResult(requestCode, resultCode, data)
 //    }
 
-    private val resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            activityResult ->
-                if(RESULT_OK == activityResult.resultCode)
-                    viewModel.getUserList()
-        }
+
 }

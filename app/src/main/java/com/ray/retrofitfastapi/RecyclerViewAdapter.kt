@@ -39,7 +39,7 @@ class RecyclerViewAdapter(val clickListener: OnItemClickListener): RecyclerView.
     }
 
     interface OnItemClickListener {
-        fun onItemEditClick(user: User) {}
+        fun onItemEditClick(user: User)
 
     }
 

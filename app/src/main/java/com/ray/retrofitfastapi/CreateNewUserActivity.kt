@@ -18,45 +18,50 @@ class CreateNewUserActivity : AppCompatActivity() {
         setContentView(R.layout.activity_create_new_user)
 
         val user_id = intent.getStringExtra("user_id")
-
         initViewModel()
         createUserObservable()
 
-        if (user_id != null) {
+        if(user_id != null) {
             loadUserData(user_id)
         }
-
         createButton.setOnClickListener {
             createUser(user_id)
         }
-        
-        deleteButton.setOnClickListener { 
+        deleteButton.setOnClickListener {
             deleteUser(user_id)
         }
     }
 
-    private fun deleteUser(userId: String?) {
-
+    private fun deleteUser(user_id: String?) {
+        viewModel.getDeleteUserObservable().observe(this, Observer <UserResponse?>{
+            if(it == null) {
+                Toast.makeText(this@CreateNewUserActivity, "Failed to delete user...", Toast.LENGTH_LONG).show()
+            } else {
+                Toast.makeText(this@CreateNewUserActivity, "Successfully deleted user...", Toast.LENGTH_LONG).show()
+                finish()
+            }
+        })
+        viewModel.deleteUser(user_id)
     }
-
     private fun loadUserData(user_id: String?) {
         viewModel.getLoadUserObservable().observe(this, Observer <UserResponse?>{
-            if (it != null) {
+            if(it != null) {
                 editTextName.setText(it.data?.name)
                 editTextEmail.setText(it.data?.email)
                 createButton.setText("Update")
-                deleteButton.visibility = VISIBLE
+                deleteButton.visibility =  VISIBLE
             }
         })
         viewModel.getUserData(user_id)
     }
-
-    private fun createUser(user_id: String?) {
+    private fun createUser(user_id: String?){
         val user = User("", editTextName.text.toString(), editTextEmail.text.toString(), "Active", "Male")
+
         if(user_id == null)
             viewModel.createUser(user)
         else
             viewModel.updateUser(user_id, user)
+
     }
 
     private fun initViewModel() {
@@ -66,10 +71,10 @@ class CreateNewUserActivity : AppCompatActivity() {
 
     private fun createUserObservable() {
         viewModel.getCreateNewUserObservable().observe(this, Observer <UserResponse?>{
-            if (it == null) {
-                Toast.makeText(this@CreateNewUserActivity, "Fail to create/update new user...", Toast.LENGTH_LONG).show()
+            if(it == null) {
+                Toast.makeText(this@CreateNewUserActivity, "Failed to create/update new user...", Toast.LENGTH_LONG).show()
             } else {
-                Toast.makeText(this@CreateNewUserActivity, "Successfully created/updated new user...", Toast.LENGTH_LONG).show()
+                Toast.makeText(this@CreateNewUserActivity, "Successfully created/updated user...", Toast.LENGTH_LONG).show()
                 finish()
             }
         })
