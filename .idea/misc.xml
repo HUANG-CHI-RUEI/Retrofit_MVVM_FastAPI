@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/pei4b/AndroidStudioProjects/RetrofitFastAPI/app/src/main/res/layout/activity_create_new_user.xml" value="0.25" />
         <entry key="..\:/Users/pei4b/AndroidStudioProjects/RetrofitFastAPI/app/src/main/res/layout/activity_main.xml" value="0.1875" />
         <entry key="..\:/Users/pei4b/AndroidStudioProjects/RetrofitFastAPI/app/src/main/res/layout/recycler_row_list.xml" value="0.274609375" />
       </map>

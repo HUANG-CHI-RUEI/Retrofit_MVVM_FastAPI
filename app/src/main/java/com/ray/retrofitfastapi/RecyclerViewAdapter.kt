@@ -6,7 +6,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.recycler_row_list.view.*
 
-class RecyclerViewAdapter: RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
+class RecyclerViewAdapter(val clickListener: OnItemClickListener): RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder>() {
 
     var userList = mutableListOf<User>()
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
@@ -16,6 +16,9 @@ class RecyclerViewAdapter: RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
         holder.bind(userList[position])
+        holder.itemView.setOnClickListener{
+            clickListener.onItemEditClick(userList[position])
+        }
     }
 
     override fun getItemCount(): Int {
@@ -33,6 +36,11 @@ class RecyclerViewAdapter: RecyclerView.Adapter<RecyclerViewAdapter.MyViewHolder
             textViewEmail.text = data.email
             textViewStats.text = data.status
         }
+    }
+
+    interface OnItemClickListener {
+        fun onItemEditClick(user: User) {}
+
     }
 
 }
